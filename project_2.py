@@ -31,8 +31,7 @@ class ImageLoader(Dataset):
         else:
                 return image
 
-batch_size=2
-
+batch_size=1
 num_workers=0
 rootPath_train = "/Users/behnaz/cloud-type-classification2/images/train"
 rootPath_test = "/Users/behnaz/cloud-type-classification2/images/test"
@@ -40,12 +39,12 @@ csv_train_path = "/Users/behnaz/cloud-type-classification2/train.csv"
 csv_test_path = "/Users/behnaz/cloud-type-classification2/test.csv"
 
 train_transforms = transforms.Compose([transforms.ToTensor(), 
-                                       transforms.Resize((128,128)),
-                                       transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                       transforms.Resize((224,224)),
+                                    #    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                        ])
 test_transforms = transforms.Compose([transforms.ToTensor(), 
-                                      transforms.Resize((128,128)), 
-                                      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                      transforms.Resize((224,224)), 
+                                    #   transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                       ])
 dataset_train = ImageLoader(rootPath_train, csv_train_path, transform=train_transforms)
 dataset_test = ImageLoader(rootPath_test, csv_test_path, transform=test_transforms)
@@ -55,4 +54,7 @@ test_loader = DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num
 
 image, label = next(iter(train_loader))
 print(image.shape)
-plt.show(torchvision.utils.make_grid(image))
+image = image.squeeze().permute(1,2,0)
+print(image.shape)
+plt.imshow(image)
+plt.show()
